@@ -18,10 +18,14 @@ const io = socketIo(server, {
     }
 });
 
-// Initialize Firebase Admin with your config file
+// Initialize Firebase Admin with environment variable or local file
+const firebaseConfig = process.env.FIREBASE_ADMIN_CONFIG
+    ? JSON.parse(process.env.FIREBASE_ADMIN_CONFIG)
+    : require('./config/firebase-admin.json');
+
 try {
     admin.initializeApp({
-        credential: admin.credential.cert('./config/firebase-admin.json')
+        credential: admin.credential.cert(firebaseConfig)
     });
     console.log('Firebase Admin initialized successfully');
 } catch (error) {
