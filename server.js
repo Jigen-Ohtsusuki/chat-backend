@@ -60,6 +60,16 @@ io.on('connection', (socket) => {
         socket.leave(chatId);
     });
 
+    socket.on('typing:start', ({ chatId, userId }) => {
+        console.log(`${userId} started typing in chat ${chatId}`);
+        socket.to(chatId).emit('typing:started', { userId });
+    });
+
+    socket.on('typing:stop', ({ chatId, userId }) => {
+        console.log(`${userId} stopped typing in chat ${chatId}`);
+        socket.to(chatId).emit('typing:stopped', { userId });
+    }); 
+
     socket.on('request:join', async ({ chatId, userId }) => {
         try {
             const chatRef = db.collection('chats').doc(chatId);
